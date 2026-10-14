@@ -1,0 +1,26 @@
+.controls, .controls > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.controls a, .controls h1 {
+    margin: 8px 16px 0;
+}
+
+.controls select, .controls input {
+    width: 100px;
+}
+
+::deep .direction_name {
+    width: 70%;
+}
+
+::deep .actions {
+    width: 30%;
+    text-align: center;
+}
+
+.grid-container {
+    height: 30vh;
+}

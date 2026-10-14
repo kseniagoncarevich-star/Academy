@@ -1,4 +1,5 @@
 @page "/directions"
+@rendermode InteractiveServer
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using Microsoft.EntityFrameworkCore
 @using AcademyCW.Models
@@ -14,20 +15,55 @@
     <p>
         <a href="directions/create" class="btn btn-primary">Добавить</a>
     </p>
+
+   @* <div>
+        <label for="search">Поиск:</label>
+        <input type="search" id="search" @bind="direction_nameFilter" @bind:event="oninput" class="form-control" placeholder="По названию..." />
+    </div> *@
+
+	<div>
+        <label for="items-per-page">Элементов на странице:</label>
+        <select id="items-per-page" @bind="pagination.ItemsPerPage" class="form-control">
+            <option value="5">5</option>
+            <option value="8">8</option>
+            <option value="13">13</option>
+        </select>
+	</div>
 </div>
 
-<QuickGrid Class="table" Items="context.Directions">
-    <PropertyColumn Property="direction => direction.direction_name" />
+<div>
+    <div class="grid-container">
+        <QuickGrid Class="table" Items="context.Directions" Pagination="pagination" SortBy="sortBy">
+            <PropertyColumn Property="direction => direction.direction_name" 
+                            Title="Название направления"
+                            Class="direction_name"
+							Sortable="true" />
 
-    <TemplateColumn Context="direction">
-        <a href="@($"directions/edit?direction_id={direction.direction_id}")">Edit</a> |
-        <a href="@($"directions/details?direction_id={direction.direction_id}")">Details</a> |
-        <a href="@($"directions/delete?direction_id={direction.direction_id}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+            <TemplateColumn Context="direction" Title="Действия" Class="actions">
+                <a href="@($"directions/edit?direction_id={direction.direction_id}")">Edit</a> |
+                <a href="@($"directions/details?direction_id={direction.direction_id}")">Details</a> |
+                <a href="@($"directions/delete?direction_id={direction.direction_id}")">Delete</a>
+            </TemplateColumn>
+        </QuickGrid>
+    </div>
+    <Paginator State="pagination" />
+</div>
 
 @code {
     private AcademyCWContext context = default!;
+
+    GridSort<Direction> sortBy = GridSort<Direction>.ByAscending(m => m.direction_name);
+    PaginationState pagination = new PaginationState { ItemsPerPage = 5 };
+
+    // private string? direction_nameFilter { get; set; }
+
+    // private async void Search(ChangeEventArgs args)
+    // {
+    //     var searchTerm = (string)args.Value;
+    //     var db = context.Directions.CreatDbContext();
+    //     forecasts = await db.context.Directions.Where(m => m.Summary.Contains(searchTerm)).OrderByDescending
+    //     StateHasChange();
+    // }
 
     protected override void OnInitialized()
     {
