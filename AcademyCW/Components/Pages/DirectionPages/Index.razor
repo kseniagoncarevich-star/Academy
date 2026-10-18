@@ -16,10 +16,9 @@
         <a href="directions/create" class="btn btn-primary">Добавить</a>
     </p>
 
-   @* <div>
-        <label for="search">Поиск:</label>
-        <input type="search" id="search" @bind="direction_nameFilter" @bind:event="oninput" class="form-control" placeholder="По названию..." />
-    </div> *@
+   <div>
+        <input type="text" @bind="searchString" @bind:event="oninput" class="form-control" placeholder="Поиск по названию..." />
+    </div>
 
 	<div>
         <label for="items-per-page">Элементов на странице:</label>
@@ -33,7 +32,7 @@
 
 <div>
     <div class="grid-container">
-        <QuickGrid Class="table" Items="context.Directions" Pagination="pagination" SortBy="sortBy">
+        <QuickGrid Class="table" Items="@FilteredDirections" Pagination="pagination" SortBy="sortBy">
             <PropertyColumn Property="direction => direction.direction_name" 
                             Title="Название направления"
                             Class="direction_name"
@@ -55,15 +54,20 @@
     GridSort<Direction> sortBy = GridSort<Direction>.ByAscending(m => m.direction_name);
     PaginationState pagination = new PaginationState { ItemsPerPage = 5 };
 
-    // private string? direction_nameFilter { get; set; }
+    private string searchString = "";
 
-    // private async void Search(ChangeEventArgs args)
-    // {
-    //     var searchTerm = (string)args.Value;
-    //     var db = context.Directions.CreatDbContext();
-    //     forecasts = await db.context.Directions.Where(m => m.Summary.Contains(searchTerm)).OrderByDescending
-    //     StateHasChange();
-    // }
+    private IQueryable<Direction> FilteredDirections
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(searchString))
+            {
+                return context.Directions;
+            }
+
+            return context.Directions.Where(d => d.direction_name.Contains(searchString));
+        }
+    }
 
     protected override void OnInitialized()
     {
