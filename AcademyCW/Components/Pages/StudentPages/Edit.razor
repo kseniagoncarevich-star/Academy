@@ -6,16 +6,18 @@
 
 <PageTitle>Edit</PageTitle>
 
-<h1>Edit</h1>
+@* <h1>Edit</h1>
 
 <h2>Student</h2>
-<hr />
+<hr /> *@
 @if (Student is null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
+    <h1>@Student.full_name</h1>
+    <hr />
     <div class="row">
         <div class="col-md-4">
             <EditForm method="post" Model="Student" OnValidSubmit="UpdateStudent" FormName="edit" Enhance>
@@ -23,7 +25,7 @@ else
                 <ValidationSummary role="alert"/>
                 <input type="hidden" name="Student.stud_id" value="@Student.stud_id" />
                 <div class="mb-3">
-                <span class="text-danger">*</span>
+                    <span class="text-danger">*</span>
                     <label for="group" class="form-label">group:</label>
                     <InputNumber id="group" @bind-Value="Student.group" class="form-control" aria-required="true"/>
                     <ValidationMessage For="() => Student.group" class="text-danger" />
