@@ -32,12 +32,13 @@
 
 <div>
     <div class="grid-container">
-        <QuickGrid Class="table" Items="@FilteredDirections.Include(d => d.Groups)" Pagination="pagination" SortBy="sortBy">
+        <QuickGrid Class="table" Items="@FilteredDirections.Include(d => d.Groups).ThenInclude(g => g.Students)" Pagination="pagination" SortBy="sortBy">
             <PropertyColumn Property="direction => direction.direction_name" 
                             Title="Название направления"
                             Class="direction_name"
 							Sortable="true" />
-            <PropertyColumn Property="direction => direction.Groups.Count" /> 
+            <PropertyColumn Property="direction => direction.Groups.Count" />
+            <PropertyColumn Property="direction => direction.Groups.Sum(g => g.Students.Count)" />
 
             <TemplateColumn Context="direction" Title="Действия" Class="actions">
                 <a href="@($"directions/edit?direction_id={direction.direction_id}")">Edit</a> |
