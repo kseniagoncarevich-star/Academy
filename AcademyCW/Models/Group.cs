@@ -27,6 +27,7 @@ namespace AcademyCW.Models
 
         //Navigation properties:
         public Direction Direction { get; set; } //Многие к одному 
+        public ICollection<Student> Students { get; set; }
 
     }
 }
