@@ -33,13 +33,17 @@
 </div>
 
 <QuickGrid Class="table" Items="@FilteredDiscipline" Pagination="pagination" Sortable="true">
-    <PropertyColumn Property="discipline => discipline.discipline_name" Title="Название дисциплины" Sortable="true" />
+    <TemplateColumn Context="discipline"
+                    Title="Дисциплина">
+        <a href="@($"disciplines/details?discipline_id={discipline.discipline_id}")">@discipline.discipline_name</a>
+    </TemplateColumn>
+    @* <PropertyColumn Property="discipline => discipline.discipline_name" Title="Название дисциплины" Sortable="true" /> *@
     <PropertyColumn Property="discipline => discipline.number_of_lessons" Title="Количество пар" Sortable="true" />
-    <PropertyColumn Property="discipline => discipline.Teachers" Title="Преподаватели" Sortable="true" />
+    @* <PropertyColumn Property="discipline => discipline.Teachers" Title="Преподаватели" Sortable="true" /> *@
 
     <TemplateColumn Context="discipline">
-        <a href="@($"disciplines/edit?discipline_id={discipline.discipline_id}")">Edit</a> |
-        <a href="@($"disciplines/details?discipline_id={discipline.discipline_id}")">Details</a> @* |
+       @*  <a href="@($"disciplines/edit?discipline_id={discipline.discipline_id}")">Edit</a> |
+        <a href="@($"disciplines/details?discipline_id={discipline.discipline_id}")">Details</a> |
         <a href="@($"disciplines/delete?discipline_id={discipline.discipline_id}")">Delete</a> *@
     </TemplateColumn>
 </QuickGrid>
