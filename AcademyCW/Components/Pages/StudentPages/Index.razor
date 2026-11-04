@@ -9,15 +9,30 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1>Студенты</h1>
-
 <div class="controls">
+
+	<h1>Студенты</h1>
+
     <p>
         <a href="students/create" class="btn btn-primary">Добавить</a>
     </p>
+
+    <div>
+        <input type="text" @bind="searchString" @bind:event="oninput" class="form-control" placeholder="Поиск по названию..." />
+    </div>
+
+    <div>
+        <label for="items-per-page">Элементов на странице:</label>
+        <select id="items-per-page" @bind="pagination.ItemsPerPage" class="form-control">
+            <option value="5">5</option>
+            <option value="8">8</option>
+            <option value="13">13</option>
+        </select>
+    </div>
+
 </div>
 
-<QuickGrid Class="table" Items="context.Students.Include(s => s.Group).ThenInclude(g => g.Direction)">
+<QuickGrid Class="table" Items="@FilteredStudent.Include(s => s.Group).ThenInclude(g => g.Direction)" Pagination="pagination">
     @* <PropertyColumn Property="student => student.first_name" />
     <PropertyColumn Property="student => student.last_name" />
     <PropertyColumn Property="student => student.middle_name" /> *@
@@ -28,9 +43,9 @@
                     SortBy="sortBy">
         <a href="@($"students/details?stud_id={student.stud_id}")">@student.full_name</a>
     </TemplateColumn>
-    <PropertyColumn Property="student => student.birth_date"            Sortable="true"/>
-    <PropertyColumn Property="student => student.Group.group_name"      Sortable="true" />
-    <PropertyColumn Property="student => student.Group.Direction.direction_name" />
+    <PropertyColumn Property="student => student.birth_date" Title="Дата рождения" Sortable="true" />
+    <PropertyColumn Property="student => student.Group.group_name" Title="Название группы" Sortable="true" />
+    <PropertyColumn Property="student => student.Group.Direction.direction_name" Title="Название направления" />
     @* <PropertyColumn Property="student => student.email" />
     <PropertyColumn Property="student => student.phone" />
     <PropertyColumn Property="student => student.photo" /> *@
@@ -41,10 +56,30 @@
         <a href="@($"students/delete?stud_id={student.stud_id}")">Delete</a> 
     </TemplateColumn> *@
 </QuickGrid>
+<Paginator State="pagination" />
 
 @code 
 {
     private AcademyCWContext context = default!;
+
+    PaginationState pagination = new PaginationState { ItemsPerPage = 5 };
+
+    private string searchString = "";
+
+    private IQueryable<Student> FilteredStudent
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(searchString))
+            {
+                return context.Students;
+            }
+
+            return context.Students.Where(s => s.last_name.Contains(searchString) ||
+                                          s.first_name.Contains(searchString) ||
+                                          (s.middle_name ?? "").Contains(searchString));
+        }
+    }
 
     GridSort<Student> sortBy = GridSort<Student>.ByAscending(s => s.last_name);
 

@@ -1,4 +1,5 @@
 @page "/groups"
+@rendermode InteractiveServer
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using Microsoft.EntityFrameworkCore
 @using AcademyCW.Models
@@ -14,24 +15,59 @@
     <p>
         <a href="groups/create" class="btn btn-primary">Добавить</a>
     </p>
+
+    <div>
+        <input type="text" @bind="searchString" @bind:event="oninput" class="form-control" placeholder="Поиск по названию..." />
+    </div>
+
+    <div>
+        <label for="items-per-page">Элементов на странице:</label>
+        <select id="items-per-page" @bind="pagination.ItemsPerPage" class="form-control">
+            <option value="5">5</option>
+            <option value="8">8</option>
+            <option value="13">13</option>
+        </select>
+    </div>
+
 </div>
 
-<QuickGrid Class="table" Items="context.Groups.Include(g => g.Direction)">
-    <PropertyColumn Property="group => group.group_name" />
-    <PropertyColumn Property="group => group.Direction.direction_name" />
-    <PropertyColumn Property="group => new Week ((int)(group.learning_days ?? 0))" />
-    <PropertyColumn Property="group => group.start_time" />
-    <PropertyColumn Property="group => group.start_date" />
+<div class="grid-container">
+    <QuickGrid Class="table" Items="@FilteredGroup.Include(d => d.Direction).Include(s => s.Students)" Pagination="pagination">
+        <PropertyColumn Property="group => group.group_name" Title="Название группы" Sortable="true" />
+        <PropertyColumn Property="group => group.Direction.direction_name" Title="Название направления" Sortable="true" />
+        <PropertyColumn Property="group => group.Students.Count" Title="Обучается студентов" />
+        <PropertyColumn Property="group => new Week((int)(group.learning_days ?? 0))" Title="Учебные дни" />
+        <PropertyColumn Property="group => group.start_time" Title="Время начала" />
+        <PropertyColumn Property="group => group.start_date" Title="Дата начала" />
 
-    <TemplateColumn Context="group">
-        @* <a href="@($"groups/edit?group_id={group.group_id}")">Edit</a> | *@
-        <a href="@($"groups/details?group_id={group.group_id}")">Details</a>
-        @* <a href="@($"groups/delete?group_id={group.group_id}")">Delete</a> *@
-    </TemplateColumn>
-</QuickGrid>
+        <TemplateColumn Context="group">
+            @* <a href="@($"groups/edit?group_id={group.group_id}")">Edit</a> | *@
+            <a href="@($"groups/details?group_id={group.group_id}")">Details</a>
+            @* <a href="@($"groups/delete?group_id={group.group_id}")">Delete</a> *@
+        </TemplateColumn>
+    </QuickGrid>
+</div>
+<Paginator State="pagination" />
 
 @code {
     private AcademyCWContext context = default!;
+
+    PaginationState pagination = new PaginationState { ItemsPerPage = 5 };
+
+    private string searchString = "";
+
+    private IQueryable<Group> FilteredGroup
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(searchString))
+            {
+                return context.Groups;
+            }
+
+            return context.Groups.Where(g => g.group_name.Contains(searchString));
+        }
+    }
 
     protected override void OnInitialized()
     {
