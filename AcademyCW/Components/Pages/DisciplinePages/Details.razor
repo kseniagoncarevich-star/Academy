@@ -21,17 +21,14 @@
             <a href="@($"/disciplines/edit?discipline_id={discipline.discipline_name}")" class="btn btn-primary">Изменить</a>
         </div>
         <dl class="row">
-            <dt class="col-sm-2">discipline_name</dt>
-            <dd class="col-sm-10">@discipline.discipline_name</dd>
-            <dt class="col-sm-2">number_of_lessons</dt>
-            <dd class="col-sm-10">@discipline.number_of_lessons</dd>
-            <dt class="col-sm-2">Teachers</dt>
-            <dd class="col-sm-10">
+            <dt class="col-sm-2">discipline_name</dt>           <dd class="col-sm-10">@discipline.discipline_name</dd>
+            <dt class="col-sm-2">number_of_lessons</dt>         <dd class="col-sm-10">@discipline.number_of_lessons</dd>
+            <dt class="col-sm-2">Teachers</dt>                  <dd class="col-sm-10">
                 @* @if (discipline.Teachers is { Count: > 0 })
                 {
                     foreach (var t in discipline.Teachers)
                     {
-                        <a href="@($"/teachers/details?teacher_id={t.teacher_id}")">@t.full_name</a><br />
+                        <a href="@($"/teachers/details?teacher_id={t.teacher_id}")">@t.full_name</a>
                     }
                 }
                 else
@@ -44,6 +41,13 @@
             @* <a href="@($"/disciplines/edit?discipline_id={discipline.discipline_id}")">Edit</a> | *@
             <a href="@($"/disciplines")">Back to List</a>
         </div>
+        <h4>Количество преподавателей: @discipline.TDR.Count</h4>
+        <ul>
+            @foreach(TeachersDisciplinesRelation tdr in discipline.TDR)
+            {
+                <li>@tdr.Teacher.full_name</li>
+            }
+        </ul>
     }
 </div>
 
@@ -56,7 +60,7 @@
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-        discipline = await context.Disciplines.Include(d => d.TDR).FirstOrDefaultAsync(m => m.discipline_id == discipline_id);
+        discipline = await context.Disciplines.Include(d => d.TDR).ThenInclude(tdr => tdr.Teacher).FirstOrDefaultAsync(m => m.discipline_id == discipline_id);
 
         if (discipline is null)
         {
