@@ -1,4 +1,5 @@
 @page "/teachers/edit"
+@rendermode InteractiveServer
 @using Microsoft.EntityFrameworkCore
 @using AcademyCW.Models
 @inject IDbContextFactory<AcademyCWContext> DbFactory
@@ -19,7 +20,7 @@ else
     <h1>@Teacher.full_name</h1>
     <hr />
     <div class="row">
-        <div class="col-md-4">
+        <div class="">
             <EditForm method="post" Model="Teacher" OnValidSubmit="UpdateTeacher" FormName="edit" Enhance>
                 <div class="human-container">
                     <div class="human-text-fields">
@@ -85,6 +86,7 @@ else
                         <ValidationMessage For="() => Teacher.full_name" class="text-danger" />
                         </div> *@
                     </div>
+                    <AddDisciplines Teacher="Teacher" />
                 </div>
                 <button type="submit" class="btn btn-primary">Save</button>
             </EditForm>
