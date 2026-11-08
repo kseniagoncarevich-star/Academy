@@ -19,6 +19,8 @@ namespace AcademyCW.Models
         public int number_of_lessons { get; set; }
 
         //Navigation properties:
-        public ICollection<Teacher>? Teachers {  get; set; }
+        //public ICollection<Teacher>? Teachers {  get; set; }
+
+        public ICollection<TeachersDisciplinesRelation>? TDR {  get; set; }
     }
 }

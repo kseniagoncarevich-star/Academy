@@ -14,6 +14,7 @@ namespace AcademyCW.Models
         public int rate { get; set; }
 
         //Navigation properties:
-        public ICollection<Discipline> Disciplines { get; set; }
+        //public ICollection<Discipline> Disciplines { get; set; }
+        public ICollection<TeachersDisciplinesRelation>? TDR { get; set; }
     }
 }

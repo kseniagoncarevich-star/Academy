@@ -8,7 +8,7 @@ public class AcademyCWContext(DbContextOptions<AcademyCWContext> options) : DbCo
     public DbSet<AcademyCW.Models.Discipline> Disciplines { get; set; } = default!;
     public DbSet<AcademyCW.Models.Teacher> Teachers { get; set; } = default!;
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    /*protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AcademyCW.Models.Teacher>()
             .HasMany(t => t.Disciplines)
@@ -17,6 +17,6 @@ public class AcademyCWContext(DbContextOptions<AcademyCWContext> options) : DbCo
                 l => l.HasOne(typeof(AcademyCW.Models.Discipline)).WithMany().HasForeignKey("discipline"),
                 r => r.HasOne(typeof(AcademyCW.Models.Teacher)).WithMany().HasForeignKey("teacher"),
                 j => j.HasKey("teacher", "discipline"));
-    }
+    }*/
 
 }

@@ -27,7 +27,7 @@
         </dl>
         <dl class="row">
             <dt class="col-sm-2">Teachers</dt>
-            <dd class="col-sm-10">@discipline.Teachers</dd>
+            @* <dd class="col-sm-10">@discipline.Teachers</dd> *@
         </dl>
         <EditForm method="post" Model="discipline" OnValidSubmit="DeleteDiscipline" FormName="delete" Enhance>
             <button type="submit" class="btn btn-danger" disabled="@(discipline is null)">Delete</button> |

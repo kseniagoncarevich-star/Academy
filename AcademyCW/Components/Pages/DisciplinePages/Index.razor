@@ -42,8 +42,8 @@
     @* <PropertyColumn Property="discipline => discipline.Teachers" Title="Преподаватели" Sortable="true" /> *@
 
     <TemplateColumn Context="discipline">
-       @*  <a href="@($"disciplines/edit?discipline_id={discipline.discipline_id}")">Edit</a> |
-        <a href="@($"disciplines/details?discipline_id={discipline.discipline_id}")">Details</a> |
+        <a href="@($"disciplines/edit?discipline_id={discipline.discipline_id}")">Edit</a> |
+		<a href="@($"disciplines/details?discipline_id={discipline.discipline_id}")">Details</a>@*  |
         <a href="@($"disciplines/delete?discipline_id={discipline.discipline_id}")">Delete</a> *@
     </TemplateColumn>
 </QuickGrid>
